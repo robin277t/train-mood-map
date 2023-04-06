@@ -29,7 +29,8 @@ class NrPoller
     @client = Stomp::Client.new(@username, @password, @hostname, @port, true)
     puts @client.connection_frame.body
 
-    @client.subscribe('/topic/darwin.pushport-v16',{id: 1, ack: 'auto' }) do |msg|
+    # @client.subscribe('/topic/darwin.pushport-v16',{id: 1, ack: 'auto' }) do |msg|
+    @client.subscribe('/topic/darwin.pushport-v16', {id: 1, ack: 'auto'}) do |msg|
       puts msg.body
       @client.acknowledge(msg, msg.headers)
     end

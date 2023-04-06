@@ -67,10 +67,10 @@ If I get to the stretch goals, historical data would also work on a colour coded
 ## Development Process
 
 - *This project will enable me to learn several things;*
-- Huge data dump handling from live feed 
+- Huge data dump handling from live feed (ActiveMQ)
 - Geospatial data and mapping
 - More complex database queries
-- Ruby on Rails
+- Python backend - JS/react frontend
 - Make a good looking interactive frontend
 - Deploy a live site and server with large database
 - Entering into a relatively poorly documented open source data world
