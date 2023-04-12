@@ -9,36 +9,42 @@
 #BELOW CAME FROM RUBY REPO ON OPEN RAIL DATA, APPEARS TO BE A BIT OLD THOUGH
 
 require "stomp"
-# require_relative "../ENV_VARIABLES.txt"
+require "zlib"
+require "stringio"
 
 class NrPoller
 
   def initialize
-    # @security_token = 'security-token-from-your-account-data-feeds-page'
-    # think the above line is redundant these days
-    credentials = File.readlines("ENV_VARIABLES.txt").map(&:chomp)
+    credentials = File.readlines("../ENV_VARIABLES.txt").map(&:chomp)
     @username = credentials[0]
     @password = credentials[1]
-    
+    @topic = '/topic/darwin.pushport-v16'
     @hostname = 'darwin-dist-44ae45.nationalrail.co.uk'
-    # @hostname = 'datafeeds.nationalrail.co.uk'
     @port = '61613'
   end
 
   def run
-    @client = Stomp::Client.new(@username, @password, @hostname, @port, true)
+    @client = Stomp::Client.new(@username, @password, @hostname, @port, false)
     puts @client.connection_frame.body
+    
+    i = 1
 
-    # @client.subscribe('/topic/darwin.pushport-v16',{id: 1, ack: 'auto' }) do |msg|
-    @client.subscribe('/topic/darwin.pushport-v16', {id: 1, ack: 'auto'}) do |msg|
-      puts msg.body
+    @client.subscribe @topic, { :ack => :client } do |msg|
+      decompressed_data = Zlib::GzipReader.new(StringIO.new(msg.body)).read
+      puts msg.headers
+      puts "---#{i}---"
+      i += 1
+      puts decompressed_data
+      puts '-----------'
+      puts '-----------'
       @client.acknowledge(msg, msg.headers)
     end
-
+    
     @client.join
     puts "Connected"
+    
   end
-
+  
   def shutdown
     if @client
       @client.close

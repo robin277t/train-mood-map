@@ -23,6 +23,7 @@ import time
 import socket
 import logging
 
+
 logging.basicConfig(format='%(asctime)s %(levelname)s\t%(message)s', level=logging.INFO)
 
 try:
@@ -30,8 +31,11 @@ try:
 except ModuleNotFoundError:
     logging.error("Class files not found - please configure the client following steps in README.md!")
 
-USERNAME = ''
-PASSWORD = ''
+with open('ENV_VARIABLES.txt', 'r') as env_file:
+    env_variables = env_file.readlines()
+    USERNAME = env_variables[0].strip()
+    PASSWORD = env_variables[1].strip()
+
 HOSTNAME = 'darwin-dist-44ae45.nationalrail.co.uk'
 HOSTPORT = 61613
 # Always prefixed by /topic/ (it's not a queue, it's a topic)
